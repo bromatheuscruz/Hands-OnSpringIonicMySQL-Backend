@@ -1,29 +1,33 @@
 package br.com.matheuscruz.projetomc.resources;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.matheuscruz.projetomc.domain.Categoria;
+import br.com.matheuscruz.projetomc.services.CategoriaService;
 
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaResource {
 
-	@GetMapping
-	public List<Categoria> listar() {
+	@Autowired
+	private CategoriaService categoriaService;
 
-		Categoria categoria1 = new Categoria(1, "Informática");
-		Categoria categoria2 = new Categoria(2, "Escritório");
+	@GetMapping("/{id}")
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 
-		List<Categoria> lista = new ArrayList<>();
-		lista.add(categoria1);
-		lista.add(categoria2);
+		Categoria categoria = categoriaService.buscar(id);
 
-		return lista;
+		if (categoria == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		return ResponseEntity.ok(categoria);
+
 	}
 
 }
