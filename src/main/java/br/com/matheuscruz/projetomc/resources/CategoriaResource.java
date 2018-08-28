@@ -20,7 +20,7 @@ public class CategoriaResource {
 	@GetMapping("/{id}")
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 
-		Categoria categoria = categoriaService.buscar(id);
+		Categoria categoria = categoriaService.find(id);
 
 		if (categoria == null) {
 			return ResponseEntity.notFound().build();
