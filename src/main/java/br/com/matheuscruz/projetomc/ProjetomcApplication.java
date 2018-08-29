@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.matheuscruz.projetomc.domain.Categoria;
 import br.com.matheuscruz.projetomc.domain.Cidade;
+import br.com.matheuscruz.projetomc.domain.Cliente;
+import br.com.matheuscruz.projetomc.domain.Endereco;
 import br.com.matheuscruz.projetomc.domain.Estado;
 import br.com.matheuscruz.projetomc.domain.Produto;
+import br.com.matheuscruz.projetomc.domain.enums.TipoCliente;
 import br.com.matheuscruz.projetomc.repositories.CategoriaRepository;
 import br.com.matheuscruz.projetomc.repositories.CidadeRepository;
+import br.com.matheuscruz.projetomc.repositories.ClienteRepository;
+import br.com.matheuscruz.projetomc.repositories.EnderecoRepository;
 import br.com.matheuscruz.projetomc.repositories.EstadoRepository;
 import br.com.matheuscruz.projetomc.repositories.ProdutoRepository;
 
@@ -27,6 +32,10 @@ public class ProjetomcApplication implements CommandLineRunner {
 	EstadoRepository estadoRepository;
 	@Autowired
 	CidadeRepository cidadeRepository;
+	@Autowired
+	ClienteRepository clienteRepository;
+	@Autowired
+	EnderecoRepository enderecoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProjetomcApplication.class, args);
@@ -59,10 +68,22 @@ public class ProjetomcApplication implements CommandLineRunner {
 		estado1.getCidades().addAll(Arrays.asList(cidade1));
 		estado2.getCidades().addAll(Arrays.asList(cidade2, cidade3));
 
+		Cliente cliente1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "123456789", TipoCliente.PESSOA_FISICA);
+		cliente1.getTelefones().addAll(Arrays.asList("2222-2222", "3333-3333"));
+
+		Endereco endereco1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", cidade1,
+				cliente1);
+		Endereco endereco2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "387777012", cidade2,
+				cliente1);
+
+		cliente1.getEnderecos().addAll(Arrays.asList(endereco1, endereco2));
+
 		categoriaRepository.saveAll(Arrays.asList(categoria1, categoria2));
 		produtoRepository.saveAll(Arrays.asList(produto1, produto2, produto3));
 		estadoRepository.saveAll(Arrays.asList(estado1, estado2));
 		cidadeRepository.saveAll(Arrays.asList(cidade1, cidade2, cidade3));
+		clienteRepository.save(cliente1);
+		enderecoRepository.saveAll(Arrays.asList(endereco1, endereco2));
 
 	}
 }
