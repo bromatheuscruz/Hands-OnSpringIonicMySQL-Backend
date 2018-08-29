@@ -3,8 +3,8 @@ package br.com.matheuscruz.projetomc.domain;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.matheuscruz.projetomc.domain.enums.EstadoPagamento;
 
@@ -12,10 +12,10 @@ import br.com.matheuscruz.projetomc.domain.enums.EstadoPagamento;
 public class PagamentoComBoleto extends Pagamento {
 	private static final long serialVersionUID = 1L;
 		
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern = "dd/MM/yyy HH:mm")
 	private Date dataVencimento;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern = "dd/MM/yyy HH:mm")
 	private Date dataPagamento;
 
 	public PagamentoComBoleto() {
