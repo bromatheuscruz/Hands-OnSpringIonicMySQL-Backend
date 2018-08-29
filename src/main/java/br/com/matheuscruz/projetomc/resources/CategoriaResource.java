@@ -25,7 +25,6 @@ public class CategoriaResource {
 		if (categoria == null) {
 			return ResponseEntity.notFound().build();
 		}
-
 		return ResponseEntity.ok(categoria);
 
 	}

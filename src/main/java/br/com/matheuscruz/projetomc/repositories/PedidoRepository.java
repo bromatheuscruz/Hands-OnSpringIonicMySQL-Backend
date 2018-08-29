@@ -3,9 +3,9 @@ package br.com.matheuscruz.projetomc.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.matheuscruz.projetomc.domain.Produto;
+import br.com.matheuscruz.projetomc.domain.Pedido;
 
 @Repository
-public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
+public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
 
 }

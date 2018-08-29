@@ -1,5 +1,6 @@
 package br.com.matheuscruz.projetomc;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,30 +13,41 @@ import br.com.matheuscruz.projetomc.domain.Cidade;
 import br.com.matheuscruz.projetomc.domain.Cliente;
 import br.com.matheuscruz.projetomc.domain.Endereco;
 import br.com.matheuscruz.projetomc.domain.Estado;
+import br.com.matheuscruz.projetomc.domain.Pagamento;
+import br.com.matheuscruz.projetomc.domain.PagamentoComBoleto;
+import br.com.matheuscruz.projetomc.domain.PagamentoComCartao;
+import br.com.matheuscruz.projetomc.domain.Pedido;
 import br.com.matheuscruz.projetomc.domain.Produto;
+import br.com.matheuscruz.projetomc.domain.enums.EstadoPagamento;
 import br.com.matheuscruz.projetomc.domain.enums.TipoCliente;
 import br.com.matheuscruz.projetomc.repositories.CategoriaRepository;
 import br.com.matheuscruz.projetomc.repositories.CidadeRepository;
 import br.com.matheuscruz.projetomc.repositories.ClienteRepository;
 import br.com.matheuscruz.projetomc.repositories.EnderecoRepository;
 import br.com.matheuscruz.projetomc.repositories.EstadoRepository;
+import br.com.matheuscruz.projetomc.repositories.PagamentoRepository;
+import br.com.matheuscruz.projetomc.repositories.PedidoRepository;
 import br.com.matheuscruz.projetomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
 public class ProjetomcApplication implements CommandLineRunner {
 
 	@Autowired
-	CategoriaRepository categoriaRepository;
+	private CategoriaRepository categoriaRepository;
 	@Autowired
-	ProdutoRepository produtoRepository;
+	private ProdutoRepository produtoRepository;
 	@Autowired
-	EstadoRepository estadoRepository;
+	private EstadoRepository estadoRepository;
 	@Autowired
-	CidadeRepository cidadeRepository;
+	private CidadeRepository cidadeRepository;
 	@Autowired
-	ClienteRepository clienteRepository;
+	private ClienteRepository clienteRepository;
 	@Autowired
-	EnderecoRepository enderecoRepository;
+	private EnderecoRepository enderecoRepository;
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProjetomcApplication.class, args);
@@ -75,15 +87,31 @@ public class ProjetomcApplication implements CommandLineRunner {
 				cliente1);
 		Endereco endereco2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "387777012", cidade2,
 				cliente1);
-
 		cliente1.getEnderecos().addAll(Arrays.asList(endereco1, endereco2));
-
+		
 		categoriaRepository.saveAll(Arrays.asList(categoria1, categoria2));
 		produtoRepository.saveAll(Arrays.asList(produto1, produto2, produto3));
 		estadoRepository.saveAll(Arrays.asList(estado1, estado2));
 		cidadeRepository.saveAll(Arrays.asList(cidade1, cidade2, cidade3));
 		clienteRepository.save(cliente1);
 		enderecoRepository.saveAll(Arrays.asList(endereco1, endereco2));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		Pedido pedido1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cliente1, endereco1);
+		Pedido pedido2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cliente1, endereco2);
+
+		Pagamento pagamento1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, pedido1, 6);
+		pedido1.setPagamento(pagamento1);
+
+		Pagamento pagamento2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, pedido2,
+				sdf.parse("20/10/2017 00:00"), null);
+		pedido2.setPagamento(pagamento2);
+
+		cliente1.getPedidos().addAll(Arrays.asList(pedido1, pedido2));
+
+		pedidoRepository.saveAll(Arrays.asList(pedido1, pedido2));
+		pagamentoRepository.saveAll(Arrays.asList(pagamento1, pagamento2));
 
 	}
 }
