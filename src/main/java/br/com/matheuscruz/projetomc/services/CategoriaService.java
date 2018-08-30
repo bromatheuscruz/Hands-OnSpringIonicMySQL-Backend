@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.matheuscruz.projetomc.domain.Categoria;
+import br.com.matheuscruz.projetomc.dto.CategoriaDTO;
 import br.com.matheuscruz.projetomc.repositories.CategoriaRepository;
 import br.com.matheuscruz.projetomc.services.exceptions.DataViolationException;
 import br.com.matheuscruz.projetomc.services.exceptions.ObjectNotFoundException;
@@ -61,5 +62,11 @@ public class CategoriaService {
 
 		return categoriaRepository.findAll(pageRequest);
 
+	}
+
+	public Categoria fromDTO(CategoriaDTO categoriaDTO) {
+		
+		return new Categoria(categoriaDTO.getId(), categoriaDTO.getNome());
+	
 	}
 }
