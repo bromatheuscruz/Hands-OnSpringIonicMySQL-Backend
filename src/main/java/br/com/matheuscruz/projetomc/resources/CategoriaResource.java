@@ -80,7 +80,7 @@ public class CategoriaResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody @Valid CategoriaDTO categoriaDTO, @PathVariable Integer id) {
-
+		
 		Categoria categoria = categoriaService.fromDTO(categoriaDTO);
 		categoria.setId(id);
 		categoria = categoriaService.update(categoria);
