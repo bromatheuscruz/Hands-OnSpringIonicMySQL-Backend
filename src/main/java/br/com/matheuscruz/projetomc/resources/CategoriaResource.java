@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,6 +28,20 @@ public class CategoriaResource {
 
 	@Autowired
 	private CategoriaService categoriaService;
+
+	@GetMapping("/page")
+	public ResponseEntity<Page<CategoriaDTO>> findPage(
+			@RequestParam(name = "page", defaultValue = "0") Integer page,
+			@RequestParam(name = "linesPerPage", defaultValue = "4") Integer linesPerPage,
+			@RequestParam(name = "orderBy", defaultValue = "id") String orderBy,
+			@RequestParam(name = "page", defaultValue = "ASC") String direction) {
+
+		Page<Categoria> pagesCategoria = categoriaService.findPage(page, linesPerPage, orderBy, direction);
+		Page<CategoriaDTO> pagesCategoriaDTO = pagesCategoria.map(obj -> new CategoriaDTO(obj));
+
+		return ResponseEntity.ok().body(pagesCategoriaDTO);
+
+	}
 
 	@GetMapping
 	public ResponseEntity<List<CategoriaDTO>> findAll() {
