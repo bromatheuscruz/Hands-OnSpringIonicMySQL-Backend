@@ -1,5 +1,6 @@
 package br.com.matheuscruz.projetomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.matheuscruz.projetomc.domain.Categoria;
 import br.com.matheuscruz.projetomc.repositories.CategoriaRepository;
+import br.com.matheuscruz.projetomc.services.exceptions.DataViolationException;
 import br.com.matheuscruz.projetomc.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -14,6 +16,11 @@ public class CategoriaService {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
+
+	public List<Categoria> findAll() {
+
+		return categoriaRepository.findAll();
+	}
 
 	public Categoria find(Integer id) {
 		Optional<Categoria> obj = categoriaRepository.findById(id);
@@ -34,4 +41,14 @@ public class CategoriaService {
 
 	}
 
+	public void delete(Integer id) {
+		find(id);
+		try {
+			categoriaRepository.deleteById(id);
+
+		} catch (DataViolationException e) {
+
+			throw new DataViolationException("Não é possível excluir uma categoria que contém produtos");
+		}
+	}
 }

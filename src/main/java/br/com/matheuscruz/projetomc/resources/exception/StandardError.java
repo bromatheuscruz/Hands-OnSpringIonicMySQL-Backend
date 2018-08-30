@@ -1,4 +1,4 @@
-package br.com.matheuscruz.projetomc.resources.exceptions;
+package br.com.matheuscruz.projetomc.resources.exception;
 
 import java.io.Serializable;
 
