@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import br.com.matheuscruz.projetomc.domain.Categoria;
 import br.com.matheuscruz.projetomc.dto.CategoriaDTO;
 import br.com.matheuscruz.projetomc.repositories.CategoriaRepository;
-import br.com.matheuscruz.projetomc.services.exceptions.DataViolationException;
+import br.com.matheuscruz.projetomc.services.exceptions.ConstraintViolationException;
 import br.com.matheuscruz.projetomc.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -50,9 +50,9 @@ public class CategoriaService {
 		try {
 			categoriaRepository.deleteById(id);
 
-		} catch (DataViolationException e) {
+		} catch (ConstraintViolationException e) {
 
-			throw new DataViolationException("Não é possível excluir uma categoria que contém produtos");
+			throw new ConstraintViolationException("Não é possível excluir uma categoria que contém produtos");
 		}
 	}
 

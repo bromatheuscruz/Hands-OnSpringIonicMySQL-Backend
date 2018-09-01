@@ -9,7 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import br.com.matheuscruz.projetomc.services.exceptions.DataViolationException;
+import br.com.matheuscruz.projetomc.services.exceptions.ConstraintViolationException;
 import br.com.matheuscruz.projetomc.services.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice
@@ -23,8 +23,8 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}
 
-	@ExceptionHandler(DataViolationException.class)
-	public ResponseEntity<StandardError> dataIntegrity(DataViolationException e, HttpServletRequest request) {
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<StandardError> dataIntegrity(ConstraintViolationException e, HttpServletRequest request) {
 
 		StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
 				System.currentTimeMillis());
