@@ -44,7 +44,7 @@ public class ClienteService {
 
 	public Cliente fromDTO(ClienteNewDTO clienteNewDTO) {
 		Cliente cliente = new Cliente(null, clienteNewDTO.getNome(), clienteNewDTO.getEmail(),
-				clienteNewDTO.getCnpjOuCpf(), TipoCliente.toEnum(clienteNewDTO.getTipoCliente()));
+				clienteNewDTO.getCpfOuCnpj(), TipoCliente.toEnum(clienteNewDTO.getTipoCliente()));
 
 		Cidade cidade = new Cidade(clienteNewDTO.getCidadeId(), null, null);
 
