@@ -1,5 +1,6 @@
 package br.com.matheuscruz.projetomc.services;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +8,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.matheuscruz.projetomc.domain.Cidade;
 import br.com.matheuscruz.projetomc.domain.Cliente;
+import br.com.matheuscruz.projetomc.domain.Endereco;
+import br.com.matheuscruz.projetomc.domain.enums.TipoCliente;
 import br.com.matheuscruz.projetomc.dto.ClienteDTO;
+import br.com.matheuscruz.projetomc.dto.ClienteNewDTO;
 import br.com.matheuscruz.projetomc.repositories.ClienteRepository;
+import br.com.matheuscruz.projetomc.repositories.EnderecoRepository;
 import br.com.matheuscruz.projetomc.services.exceptions.ConstraintViolationException;
 import br.com.matheuscruz.projetomc.services.exceptions.ObjectNotFoundException;
 
@@ -19,6 +26,9 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 
 	public Cliente find(Integer id) {
 		Optional<Cliente> obj = clienteRepository.findById(id);
@@ -32,10 +42,27 @@ public class ClienteService {
 
 	}
 
+	public Cliente fromDTO(ClienteNewDTO clienteNewDTO) {
+		Cliente cliente = new Cliente(null, clienteNewDTO.getNome(), clienteNewDTO.getEmail(),
+				clienteNewDTO.getCnpjOuCpf(), TipoCliente.toEnum(clienteNewDTO.getTipoCliente()));
+
+		Cidade cidade = new Cidade(clienteNewDTO.getCidadeId(), null, null);
+
+		Endereco endereco = new Endereco(null, clienteNewDTO.getLogradouro(), clienteNewDTO.getNumero(),
+				clienteNewDTO.getComplemento(), clienteNewDTO.getBairro(), clienteNewDTO.getCep(), cliente, cidade);
+
+		cliente.getEnderecos().add(endereco);
+		cliente.getTelefones().addAll(Arrays.asList(clienteNewDTO.getTelefone1(), clienteNewDTO.getTelefone2(),
+				clienteNewDTO.getTelefone3()));
+
+		return cliente;
+
+	}
+
 	public void delete(Integer id) {
 		find(id);
 		try {
-		clienteRepository.deleteById(id);
+			clienteRepository.deleteById(id);
 		} catch (ConstraintViolationException e) {
 			throw new ConstraintViolationException("Não é possível excluir um cliente que contém pedidos");
 		}
@@ -61,6 +88,14 @@ public class ClienteService {
 
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
+	}
+
+	@Transactional
+	public Cliente insert(Cliente cliente) {
+		cliente.setId(null);
+		cliente = clienteRepository.save(cliente);
+		enderecoRepository.saveAll(cliente.getEnderecos());
+		return cliente;
 	}
 
 }
