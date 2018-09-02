@@ -1,7 +1,5 @@
 package br.com.matheuscruz.projetomc.config;
 
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
