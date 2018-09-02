@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import br.com.matheuscruz.projetomc.services.DBService;
 
 @Configuration
-@Profile("text")
+@Profile("test")
 public class TestConfig {
 
 	@Autowired

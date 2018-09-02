@@ -85,6 +85,19 @@ public class ItemPedido implements Serializable {
 	public double getSubTotal() {
 		return (preco - desconto) * quantidade;
 	}
+	
+	
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ItemPedido [quantidade=");
+		builder.append(quantidade);
+		builder.append(", preco=");
+		builder.append(preco);
+		builder.append("]");
+		return builder.toString();
+	}
 
 	@Override
 	public int hashCode() {

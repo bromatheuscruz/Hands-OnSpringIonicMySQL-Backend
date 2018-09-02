@@ -23,7 +23,7 @@ public class ProdConfig {
 	@Bean
 	public boolean instantiateDatabase() throws ParseException {
 
-		if ("create".equals(strategy)) {
+		if (strategy.equals("create")) {
 			dbService.instantiateTestDatabase();
 			return true;
 		}
