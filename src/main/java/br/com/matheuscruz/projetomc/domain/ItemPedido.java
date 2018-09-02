@@ -1,6 +1,8 @@
 package br.com.matheuscruz.projetomc.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -31,7 +33,6 @@ public class ItemPedido implements Serializable {
 		this.quantidade = quantidade;
 		this.preco = preco;
 	}
-
 
 	@JsonIgnore
 	public Pedido getPedido() {
@@ -73,11 +74,11 @@ public class ItemPedido implements Serializable {
 	public void setPreco(Double preco) {
 		this.preco = preco;
 	}
-	
+
 	public void setProduto(Produto produto) {
 		id.setProduto(produto);
 	}
-	
+
 	public void setPedido(Pedido pedido) {
 		id.setPedido(pedido);
 	}
@@ -85,17 +86,20 @@ public class ItemPedido implements Serializable {
 	public double getSubTotal() {
 		return (preco - desconto) * quantidade;
 	}
-	
-	
-	
+
 	@Override
 	public String toString() {
+		NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 		StringBuilder builder = new StringBuilder();
-		builder.append("ItemPedido [quantidade=");
-		builder.append(quantidade);
-		builder.append(", preco=");
-		builder.append(preco);
-		builder.append("]");
+		builder.append("Nome do produto: ");
+		builder.append(getProduto().getNome());
+		builder.append(", Qtde.: ");
+		builder.append(getQuantidade());
+		builder.append(", Preço: ");
+		builder.append(numberFormat.format(getPreco()));
+		builder.append(", Subtotal: ");
+		builder.append(numberFormat.format(getSubTotal()));
+		builder.append("\n");
 		return builder.toString();
 	}
 
