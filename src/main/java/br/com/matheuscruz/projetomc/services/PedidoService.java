@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.matheuscruz.projetomc.domain.ItemPedido;
 import br.com.matheuscruz.projetomc.domain.PagamentoComBoleto;
-import br.com.matheuscruz.projetomc.domain.PagamentoComCartao;
 import br.com.matheuscruz.projetomc.domain.Pedido;
 import br.com.matheuscruz.projetomc.domain.enums.EstadoPagamento;
 import br.com.matheuscruz.projetomc.repositories.ItemPedidoRepository;
@@ -46,13 +45,11 @@ public class PedidoService {
 		pedido.setInstante(new Date());
 		pedido.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		pedido.getPagamento().setPedido(pedido);
-		
+
 		if (pedido.getPagamento() instanceof PagamentoComBoleto) {
 			PagamentoComBoleto pagamento = (PagamentoComBoleto) pedido.getPagamento();
 			boletoService.preencherPagamentoComBoleto(pagamento, pedido.getInstante());
-		}else {
-			PagamentoComCartao pagamento = (PagamentoComCartao) pedido.getPagamento();
- 		}
+		}
 		pedido = pedidoRepository.save(pedido);
 		pagamentoRepository.save(pedido.getPagamento());
 
