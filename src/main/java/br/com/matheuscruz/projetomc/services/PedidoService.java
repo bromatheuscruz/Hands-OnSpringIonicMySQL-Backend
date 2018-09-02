@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.matheuscruz.projetomc.domain.ItemPedido;
 import br.com.matheuscruz.projetomc.domain.PagamentoComBoleto;
@@ -39,7 +40,8 @@ public class PedidoService {
 		return obj.orElseThrow(() -> new ObjectNotFoundException("O id: " + id + " não foi encontrado."));
 
 	}
-
+	
+	@Transactional
 	public Pedido insert(Pedido pedido) {
 		pedido.setId(null);
 		pedido.setInstante(new Date());
