@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import br.com.matheuscruz.projetomc.services.DBService;
 import br.com.matheuscruz.projetomc.services.EmailService;
@@ -30,4 +32,8 @@ public class TestConfig {
 		return new MockEmailService();
 	}
 
+	@Bean
+	public JavaMailSender javaMailSender() {
+		return new JavaMailSenderImpl();
+	}
 }

@@ -53,6 +53,7 @@ public abstract class AbstractEmailService implements EmailService {
 			sendOrderConfirmationEmail(pedido);
 		}
 	}
+	
 
 	protected MimeMessage prepareMimeMessageFromPedido(Pedido pedido) throws MessagingException {
 
