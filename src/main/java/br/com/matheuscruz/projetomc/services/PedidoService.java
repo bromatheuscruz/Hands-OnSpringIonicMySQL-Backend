@@ -1,11 +1,18 @@
 package br.com.matheuscruz.projetomc.services;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.matheuscruz.projetomc.domain.ItemPedido;
+import br.com.matheuscruz.projetomc.domain.PagamentoComBoleto;
+import br.com.matheuscruz.projetomc.domain.PagamentoComCartao;
 import br.com.matheuscruz.projetomc.domain.Pedido;
+import br.com.matheuscruz.projetomc.domain.enums.EstadoPagamento;
+import br.com.matheuscruz.projetomc.repositories.ItemPedidoRepository;
+import br.com.matheuscruz.projetomc.repositories.PagamentoRepository;
 import br.com.matheuscruz.projetomc.repositories.PedidoRepository;
 import br.com.matheuscruz.projetomc.services.exceptions.ObjectNotFoundException;
 
@@ -13,12 +20,50 @@ import br.com.matheuscruz.projetomc.services.exceptions.ObjectNotFoundException;
 public class PedidoService {
 
 	@Autowired
-	PedidoRepository pedidoRepository;
+	private BoletoService boletoService;
+
+	@Autowired
+	private PedidoRepository pedidoRepository;
+
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+
+	@Autowired
+	private ProdutoService produtoService;
+
+	@Autowired
+	ItemPedidoRepository itemPedidoRepository;
 
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = pedidoRepository.findById(id);
 
 		return obj.orElseThrow(() -> new ObjectNotFoundException("O id: " + id + " não foi encontrado."));
 
+	}
+
+	public Pedido insert(Pedido pedido) {
+		pedido.setId(null);
+		pedido.setInstante(new Date());
+		pedido.getPagamento().setEstado(EstadoPagamento.PENDENTE);
+		pedido.getPagamento().setPedido(pedido);
+		
+		if (pedido.getPagamento() instanceof PagamentoComBoleto) {
+			PagamentoComBoleto pagamento = (PagamentoComBoleto) pedido.getPagamento();
+			boletoService.preencherPagamentoComBoleto(pagamento, pedido.getInstante());
+		}else {
+			PagamentoComCartao pagamento = (PagamentoComCartao) pedido.getPagamento();
+ 		}
+		pedido = pedidoRepository.save(pedido);
+		pagamentoRepository.save(pedido.getPagamento());
+
+		for (ItemPedido itemPedido : pedido.getItens()) {
+			itemPedido.setDesconto(0.0);
+			itemPedido.setProduto(produtoService.find(itemPedido.getProduto().getId()));
+			itemPedido.setPreco(itemPedido.getProduto().getPreco());
+			itemPedido.setPedido(pedido);
+		}
+
+		itemPedidoRepository.saveAll(pedido.getItens());
+		return pedido;
 	}
 }

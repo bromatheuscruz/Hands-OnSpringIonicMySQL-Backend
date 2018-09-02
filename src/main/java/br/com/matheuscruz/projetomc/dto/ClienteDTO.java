@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import br.com.matheuscruz.projetomc.domain.Cliente;
 import br.com.matheuscruz.projetomc.services.validation.ClienteUpdate;
 
+@SuppressWarnings("deprecation")
 @ClienteUpdate
 public class ClienteDTO implements Serializable {
 	private static final long serialVersionUID = 1L;

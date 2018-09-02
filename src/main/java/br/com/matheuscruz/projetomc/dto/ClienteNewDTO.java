@@ -6,10 +6,10 @@ import javax.validation.constraints.Email;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.br.CPF;
 
 import br.com.matheuscruz.projetomc.services.validation.ClienteInsert;
 
+@SuppressWarnings("deprecation")
 @ClienteInsert
 public class ClienteNewDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
