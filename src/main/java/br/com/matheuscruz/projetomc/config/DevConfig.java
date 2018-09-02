@@ -1,5 +1,7 @@
 package br.com.matheuscruz.projetomc.config;
 
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import br.com.matheuscruz.projetomc.services.DBService;
+import br.com.matheuscruz.projetomc.services.EmailService;
+import br.com.matheuscruz.projetomc.services.SmtpEmailService;
 
 @Configuration
 @Profile("dev")
@@ -29,6 +33,11 @@ public class DevConfig {
 		}
 
 		return false;
+	}
+
+	@Bean
+	public EmailService emailService() {
+		return new SmtpEmailService();
 	}
 
 }
