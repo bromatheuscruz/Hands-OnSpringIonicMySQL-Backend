@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,9 @@ import br.com.matheuscruz.projetomc.services.exceptions.ObjectNotFoundException;
 public class ClienteService {
 
 	@Autowired
+	private BCryptPasswordEncoder psEncoder;
+
+	@Autowired
 	private ClienteRepository clienteRepository;
 
 	@Autowired
@@ -38,13 +42,14 @@ public class ClienteService {
 
 	public Cliente fromtDTO(ClienteDTO clienteDTO) {
 
-		return new Cliente(clienteDTO.getId(), clienteDTO.getEmail(), clienteDTO.getNome(), null, null);
+		return new Cliente(clienteDTO.getId(), clienteDTO.getEmail(), clienteDTO.getNome(), null, null, null);
 
 	}
 
 	public Cliente fromDTO(ClienteNewDTO clienteNewDTO) {
 		Cliente cliente = new Cliente(null, clienteNewDTO.getNome(), clienteNewDTO.getEmail(),
-				clienteNewDTO.getCpfOuCnpj(), TipoCliente.toEnum(clienteNewDTO.getTipoCliente()));
+				clienteNewDTO.getCpfOuCnpj(), TipoCliente.toEnum(clienteNewDTO.getTipoCliente()),
+				psEncoder.encode(clienteNewDTO.getSenha()));
 
 		Cidade cidade = new Cidade(clienteNewDTO.getCidadeId(), null, null);
 
