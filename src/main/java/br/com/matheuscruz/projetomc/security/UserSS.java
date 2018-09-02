@@ -26,8 +26,7 @@ public class UserSS implements UserDetails {
 		this.id = id;
 		this.email = email;
 		this.senha = senha;
-		this.authorities = authorities.stream()
-				.map(perfil -> new SimpleGrantedAuthority(perfil.getDescricao()))
+		this.authorities = authorities.stream().map(perfil -> new SimpleGrantedAuthority(perfil.getDescricao()))
 				.collect(Collectors.toList());
 	}
 
@@ -73,4 +72,9 @@ public class UserSS implements UserDetails {
 		return true;
 	}
 
+	public boolean hasRole(Perfil perfil) {
+
+		return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+	
+	}
 }

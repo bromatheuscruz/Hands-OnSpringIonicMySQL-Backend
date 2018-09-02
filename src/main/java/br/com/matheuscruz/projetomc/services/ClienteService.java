@@ -14,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.matheuscruz.projetomc.domain.Cidade;
 import br.com.matheuscruz.projetomc.domain.Cliente;
 import br.com.matheuscruz.projetomc.domain.Endereco;
+import br.com.matheuscruz.projetomc.domain.enums.Perfil;
 import br.com.matheuscruz.projetomc.domain.enums.TipoCliente;
 import br.com.matheuscruz.projetomc.dto.ClienteDTO;
 import br.com.matheuscruz.projetomc.dto.ClienteNewDTO;
 import br.com.matheuscruz.projetomc.repositories.ClienteRepository;
 import br.com.matheuscruz.projetomc.repositories.EnderecoRepository;
+import br.com.matheuscruz.projetomc.security.UserSS;
+import br.com.matheuscruz.projetomc.services.exceptions.AuthorizationException;
 import br.com.matheuscruz.projetomc.services.exceptions.ConstraintViolationException;
 import br.com.matheuscruz.projetomc.services.exceptions.ObjectNotFoundException;
 
@@ -35,6 +38,12 @@ public class ClienteService {
 	private EnderecoRepository enderecoRepository;
 
 	public Cliente find(Integer id) {
+
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado!");
+		}
+
 		Optional<Cliente> obj = clienteRepository.findById(id);
 
 		return obj.orElseThrow(() -> new ObjectNotFoundException("O id " + id + " não foi encontrado"));
