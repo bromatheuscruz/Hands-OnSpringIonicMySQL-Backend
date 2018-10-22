@@ -30,7 +30,7 @@ public class ClienteResource {
 
 	@Autowired
 	private ClienteService clienteService;
-	
+
 	@PostMapping
 	public ResponseEntity<Void> insert(@RequestBody @Valid ClienteNewDTO clienteNewDTO) {
 
@@ -43,7 +43,7 @@ public class ClienteResource {
 
 		return ResponseEntity.created(uri).build();
 	}
-	
+
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/page")
 	public ResponseEntity<Page<ClienteDTO>> findPage(@RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -57,7 +57,7 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(pagesClientDTO);
 
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<Cliente> find(@PathVariable Integer id) {
 
@@ -69,17 +69,23 @@ public class ClienteResource {
 		return ResponseEntity.ok(cliente);
 
 	}
-	
+
+	@GetMapping("/email")
+	public ResponseEntity<Cliente> find(@RequestParam(value = "value") String email) {
+		Cliente obj = clienteService.findByEmail(email);
+		return ResponseEntity.ok().body(obj);
+	}
+
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody ClienteDTO clienteDTO, @PathVariable Integer id) {
 
 		Cliente cliente = clienteService.fromtDTO(clienteDTO);
 		cliente.setId(id);
 		cliente = clienteService.update(cliente);
-		
+
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {

@@ -64,11 +64,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	}
 
 	private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
-
+		
+		int UNAUTHORIZED = 401;
+		
 		@Override
 		public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 				AuthenticationException exception) throws IOException, ServletException {
-			response.setStatus(401);
+			response.setStatus(UNAUTHORIZED);
 			response.setContentType("application/json");
 			response.getWriter().append(json());
 		}
